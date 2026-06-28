@@ -1,19 +1,13 @@
 services:
   - type: web
-    name: supercube-backend-service
-    runtime: image
-    plan: free
-    numInstances: 1
-    image:
-      url: php:8.2-apache
+    name: supercube-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: supercube-db
-          property: connectionString
-      - key: APACHE_DOCUMENT_ROOT
-        value: /var/www/html
-
-databases:
-  - name: supercube-db
-    plan: free
+      - key: ALLOWED_ORIGINS
+        value: https://michdo93.github.io
+      - key: ADMIN_KEY
+        generateValue: true
+      - key: TOP_N
+        value: "6"
