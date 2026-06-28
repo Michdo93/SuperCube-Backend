@@ -1,9 +1,9 @@
 services:
   - type: web
     name: supercube-backend-service
+    runtime: image
     plan: free
     numInstances: 1
-    # Wir nutzen das offizielle PHP-Apache-Image direkt von Docker Hub
     image:
       url: php:8.2-apache
     envVars:
@@ -11,8 +11,6 @@ services:
         fromDatabase:
           name: supercube-db
           property: connectionString
-      # Wichtig für PHP unter Apache im Docker-Container:
-      # Wir biegen den Document Root auf das aktuelle Verzeichnis ab
       - key: APACHE_DOCUMENT_ROOT
         value: /var/www/html
 
