@@ -1,7 +1,7 @@
 services:
   - type: web
     name: supercube-backend-service
-    env: php
+    runtime: php
     plan: free
     numInstances: 1
     startCommand: apache2-foreground
