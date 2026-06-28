@@ -1,0 +1,7 @@
+{
+    "name": "supercube/backend",
+    "description": "Highscore Backend for SuperCube Unity Game",
+    "require": {
+        "php": "^8.1"
+    }
+}
