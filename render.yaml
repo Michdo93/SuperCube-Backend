@@ -14,4 +14,3 @@ services:
 databases:
   - name: supercube-db
     plan: free
-    postgresVersion: "15"
