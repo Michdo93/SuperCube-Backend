@@ -55,12 +55,13 @@ class HighscoreResponse(BaseModel):
 # ── App ──────────────────────────────────────────────────────────────────────
 app = FastAPI(title="SuperCube Highscore Backend", version="1.0.0")
 
+# Drunterliegende Middleware-Konfiguration überschreiben:
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["*"],
+    allow_origins=["*"] if ALLOWED_ORIGINS == ["*"] else ALLOWED_ORIGINS,
+    allow_credentials=False,  # Für WebGL-Requests auf False setzen!
+    allow_methods=["*"],      # Erlaubt GET, POST, OPTIONS automatisch
+    allow_headers=["*"],      # Erlaubt alle Header, die Unity mitsendet
 )
 
 # ── Routes ───────────────────────────────────────────────────────────────────
