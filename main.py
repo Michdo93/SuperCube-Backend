@@ -5,7 +5,7 @@ Deploy auf Render.com als Web Service (Python)
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
+from sqlalchemy import create_engine, Column, Integer, String, DateTime, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from pydantic import BaseModel
@@ -74,17 +74,16 @@ def get_highscores():
     """Top-N Highscores lesen – kompatibel mit dem Unity MenuController"""
     db = SessionLocal()
     try:
-        # Pro Spieler nur den besten Score
-        rows = db.execute(
-            """
+        # Nutze text() für rohe SQL-Abfragen in SQLAlchemy
+        query = text("""
             SELECT name, MAX(points) as points
             FROM highscores
             GROUP BY name
             ORDER BY points DESC
             LIMIT :n
-            """,
-            {"n": TOP_N}
-        ).fetchall()
+        """)
+
+        rows = db.execute(query, {"n": TOP_N}).fetchall()
 
         scores = [ScoreItem(name=r[0], points=str(r[1])) for r in rows]
 
@@ -93,6 +92,9 @@ def get_highscores():
             scores.append(ScoreItem(name="-", points="-"))
 
         return HighscoreResponse(scores=scores)
+    except Exception as e:
+        print(f"Fehler beim Laden der Highscores: {e}") # Zeigt den Fehler in den Render-Logs
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         db.close()
 
