@@ -52,6 +52,3 @@ uvicorn main:app --reload
 ```json
 {"name": "Alice", "points": 9500}
 ```
-```
-
-```
